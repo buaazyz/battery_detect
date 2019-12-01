@@ -38,6 +38,8 @@
 
  https://github.com/longcw/faster_rcnn_pytorch 
 
+https://github.com/chenyuntc/simple-faster-rcnn-pytorch
+
 ​	
 
 #### 近期任务
@@ -48,3 +50,28 @@
 
 3）对数据集进行基本的预处理，生成基本的样本读取文档
 
+
+
+#### 进度记录
+
+**12.1**
+
+已完成：
+
+1）对图片进行填充或裁剪，成为标准的2000 * 1040 大小 - ch
+
+2）生成初步的文件读入list - zwj
+
+进行时：
+
+1） 参照 simple-faster-rcnn 源码，改造dadaset部分 - zyz
+
+待考察：
+
+1） focal loss的使用
+
+2） roi pooling的原理以及通过cupy的编译
+
+
+
+**备注：之后上传文件尽量不要上传图片等文件，因为会影响pull的速度**
