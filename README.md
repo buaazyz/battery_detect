@@ -62,9 +62,7 @@ https://github.com/chenyuntc/simple-faster-rcnn-pytorch
 
 2）生成初步的文件读入list - zwj
 
-进行时：
-
-1） 参照 simple-faster-rcnn 源码，改造dadaset部分 - zyz
+3） 参照 simple-faster-rcnn 源码，改造dataset部分 - zyz
 
 待考察：
 
