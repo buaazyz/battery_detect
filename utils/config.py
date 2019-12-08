@@ -8,6 +8,7 @@ from pprint import pprint
 class Config:
     # data
     data_dir = 'D:/PycharmProjects/slim-faster-torch/data/'
+    split = 'train'
     min_size = 600  # image resize
     max_size = 1000 # image resize
     num_workers = 8
@@ -41,14 +42,14 @@ class Config:
     use_chainer = False # try match everything as chainer
     use_drop = False # use dropout in RoIHead
     # debug
-    debug_file = '/tmp/debugf'
+    debug_file = 'D:/PycharmProjects/slim-faster-torch/debug'
 
     test_num = 10000
     # model
-    load_path = None
+    load_path = 'D:/PycharmProjects/slim-faster-torch/checkpoints/chainer_best_model_converted_to_pytorch_0.7053.pth'
 
     caffe_pretrain = False # use caffe pretrained model instead of torchvision
-    caffe_pretrain_path = 'checkpoints/vgg16_caffe.pth'
+    caffe_pretrain_path = 'D:/PycharmProjects/slim-faster-torch/checkpoints/vgg16_caffe.pth'
 
     def _parse(self, kwargs):
         state_dict = self._state_dict()
