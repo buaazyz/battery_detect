@@ -13,47 +13,57 @@ def eval_detection_voc(
         gt_difficults=None,
         iou_thresh=0.5, use_07_metric=False):
     """Calculate average precisions based on evaluation code of PASCAL VOC.
-
+    基于对PASCAL VOC的评价代码计算平均精度
     This function evaluates predicted bounding boxes obtained from a dataset
     which has :math:`N` images by using average precision for each class.
     The code is based on the evaluation code used in PASCAL VOC Challenge.
-
-    Args:
+    此函数通过为每个类使用平均精度计算从数据集获得的预测bbox。
+    此代码基于PASCAL VOC Challenge的评价代码。
+    Args:（参数）
         pred_bboxes (iterable of numpy.ndarray): An iterable of :math:`N`
             sets of bounding boxes.
             Its index corresponds to an index for the base dataset.
             Each element of :obj:`pred_bboxes` is a set of coordinates
             of bounding boxes. This is an array whose shape is :math:`(R, 4)`,
-            where :math:`R` corresponds
-            to the number of bounding boxes, which may vary among boxes.
-            The second axis corresponds to
-            :math:`y_{min}, x_{min}, y_{max}, x_{max}` of a bounding box.
+            where :math:`R` corresponds to the number of bounding boxes, which
+            may vary among boxes.The second axis corresponds to
+             :math:`y_{min}, x_{min}, y_{max}, x_{max}` of a bounding box.
+            这个参数是预测的bbox的集合，其中的每个元素是bbox的
+            一组坐标。若有R个bbox，则其shape为（R,4),
+            分别代表每个bbox的 y_{min}, x_{min}, y_{max}, x_{max}
         pred_labels (iterable of numpy.ndarray): An iterable of labels.
             Similar to :obj:`pred_bboxes`, its index corresponds to an
             index for the base dataset. Its length is :math:`N`.
+            预测标签，长度N
         pred_scores (iterable of numpy.ndarray): An iterable of confidence
             scores for predicted bounding boxes. Similar to :obj:`pred_bboxes`,
             its index corresponds to an index for the base dataset.
             Its length is :math:`N`.
+            预测分数，长度N
         gt_bboxes (iterable of numpy.ndarray): An iterable of ground truth
             bounding boxes
             whose length is :math:`N`. An element of :obj:`gt_bboxes` is a
             bounding box whose shape is :math:`(R, 4)`. Note that the number of
             bounding boxes in each image does not need to be same as the number
             of corresponding predicted boxes.
+            实际的bounding box
         gt_labels (iterable of numpy.ndarray): An iterable of ground truth
             labels which are organized similarly to :obj:`gt_bboxes`.
+            实际标签
         gt_difficults (iterable of numpy.ndarray): An iterable of boolean
             arrays which is organized similarly to :obj:`gt_bboxes`.
-            This tells whether the
-            corresponding ground truth bounding box is difficult or not.
-            By default, this is :obj:`None`. In that case, this function
-            considers all bounding boxes to be not difficult.
+            This tells whether the corresponding ground truth bounding
+            box is difficult or not.By default, this is :obj:`None`.
+             In that case, this function considers all bounding
+            boxes to be not difficult.
+            标记对应的gt_bbox是否为困难，默认为None，即函数只考虑非困难的bbox
         iou_thresh (float): A prediction is correct if its Intersection over
             Union with the ground truth is above this value.
+            阈值，在阈值以上的预测是正确的。
         use_07_metric (bool): Whether to use PASCAL VOC 2007 evaluation metric
             for calculating average precision. The default value is
             :obj:`False`.
+            是否使用PASCAL VOC 2007评价指标来计算平均精度，默认为否。
 
     Returns:
         dict:
@@ -66,8 +76,10 @@ def eval_detection_voc(
             for class :math:`l`. If class :math:`l` does not exist in \
             either :obj:`pred_labels` or :obj:`gt_labels`, the corresponding \
             value is set to :obj:`numpy.nan`.
+            ap,第l个值对应于第l个类的ap.如果class l在pred_labels和gt_labals
+            中都不存在，对应值为nan
         * **map** (*float*): The average of Average Precisions over classes.
-
+            map:ap的平均值
     """
 
     prec, rec = calc_detection_voc_prec_rec(
