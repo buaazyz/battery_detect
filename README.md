@@ -72,4 +72,27 @@ https://github.com/chenyuntc/simple-faster-rcnn-pytorch
 
 
 
-**备注：之后上传文件尽量不要上传图片等文件，因为会影响pull的速度**
+12.13
+
+已完成：
+
+采用预训练模型，但由于类别数量与预训练模型不同，所以删去预训练中的最后一层的参数
+
+同时，对于样本不均衡，采用了适度的过采样的方法，将训练集中在core样本，复制了两份
+
+模型run通，训练10轮，通过4:1的数据集划分，在验证集中，map最高可达0.77
+
+
+
+
+
+#### 测试说明
+
+1、将测试文件的id_list文件放在data目录下，将测试的image和annotation放到对应的文件夹中
+
+2、运行以下命令：其中testfile为id_list的文件名，请确保id_list中的文件名能和annotation中在文件名完全对应
+
+```shell
+python train.py train  --istrain=False  --plot-every=100  --testfile='test.txt'
+```
+
