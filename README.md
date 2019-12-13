@@ -14,7 +14,7 @@
 
 ​		 https://zhuanlan.zhihu.com/p/31426458     
 
-​		 https://zhuanlan.zhihu.com/p/49897496 
+​		 https://zhuanlan.zhihu.com/p/49897496
 
 ​		 https://arxiv.org/abs/1506.01497 		
 
@@ -22,7 +22,7 @@
 
 ​		 focal loss 和 GHM：
 
-​			https://zhuanlan.zhihu.com/p/80594704 
+​			https://zhuanlan.zhihu.com/p/80594704
 
 ​		不过总觉得知乎上讨论的样本不均衡和我们说的不是一回事。。
 
@@ -36,11 +36,11 @@
 
 4）参考源码：
 
- https://github.com/longcw/faster_rcnn_pytorch 
+ https://github.com/longcw/faster_rcnn_pytorch
 
 https://github.com/chenyuntc/simple-faster-rcnn-pytorch
 
-​	
+​
 
 #### 近期任务
 
@@ -90,9 +90,11 @@ https://github.com/chenyuntc/simple-faster-rcnn-pytorch
 
 1、将测试文件的id_list文件放在data目录下，将测试的image和annotation放到对应的文件夹中
 
-2、运行以下命令：其中testfile为id_list的文件名，请确保id_list中的文件名能和annotation中在文件名完全对应
+2、链接：https://pan.baidu.com/s/1W9CPgou46-F_AdSc7iZAOA 提取码：nbeq
+   将以上链接中的文件（fasterrcnn_12121726_ep3）放入checkpoints目录下
+
+3、运行以下命令：其中testfile为id_list的文件名，请确保id_list中的文件名能和annotation中在文件名完全对应
 
 ```shell
-python train.py train  --istrain=False  --plot-every=100  --testfile='test.txt'
+python train.py train  --istrain=False  --testfile='test.txt'
 ```
-
