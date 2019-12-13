@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 
 import numpy as np
 
-from util import read_image
+from .util import read_image
 
 
 class BatBboxDataset:
@@ -52,16 +52,24 @@ class BatBboxDataset:
 
     """
 
-    def __init__(self, data_dir, split='total',
+    def __init__(self, data_dir, split='train',
                  ):
 
         id_list_file = os.path.join(data_dir, '{0}.txt'.format(split))
-
         
-        self.ids = [id_.split(' ')[1] for id_ in open(id_list_file)]
+#         self.ids = [id_.split(' ')[1] for id_ in open(id_list_file)]
+        self.ids = []
+        
+        for id_ in open(id_list_file):
+            id_ = id_.strip()
+            if len(id_.split(' ')) > 1:
+                self.ids.append(id_.split(' ')[1])
+            else:
+                self.ids.append(id_)
+
         # print(self.ids)
         self.data_dir = data_dir
-        # self.label_names = VOC_BBOX_LABEL_NAMES
+        self.label_names = Battery_BBOX_LABEL_NAMES
         self.label = Battery_BBOX_LABEL_NAMES
 
     def __len__(self):
@@ -81,27 +89,42 @@ class BatBboxDataset:
 
         """
         id_ = self.ids[i]
-        annodir =  os.path.join(self.data_dir, 'Dataset/Annotation', id_[:-4] + '.txt')
+        finddot = id_.find('.')
+        if finddot == -1:
+            finddot = len(id_)
+        annodir =  os.path.join(self.data_dir, 'Dataset/Annotation', id_[:finddot] + '.txt')
         bbox = list()
         label = list()
 
         with open(annodir,encoding='utf-8') as f:
             lines = f.readlines()
             for line in lines:
-                bbox.append(line.split(' ')[2:6])
+                tempbox = list()
+                newbox = [0] * 4
                 try:
                     label.append(self.label.index(line.split(' ')[1]))
+                    tempbox = line.split(' ')[2:6]
+                    newbox[0] = tempbox[1]
+                    newbox[1] = tempbox[0]
+                    newbox[2] = tempbox[3]
+                    newbox[3] = tempbox[2]
+                    bbox.append(newbox)
                 except:
                     # print(line.split(' ')[1])
-                    label.append(2)
-                    
-
+                    # label.append(2)
+                    # print('other')
+                    pass
+                
         bbox = np.stack(bbox).astype(np.float32)
         label = np.stack(label).astype(np.int32)
-
+        # print(label)
 
         # Load a image
-        img_file = os.path.join(self.data_dir, 'Dataset/Image', id_)
+        findg = id_.find('g')
+        if findg != -1:
+            img_file = os.path.join(self.data_dir, 'Dataset/Image', id_[:findg+1])
+        else:
+            img_file = os.path.join(self.data_dir, 'Dataset/Image', id_,'.jpg')
         img = read_image(img_file, color=True)
 
 
@@ -113,10 +136,10 @@ class BatBboxDataset:
 
 Battery_BBOX_LABEL_NAMES = (
     '带电芯充电宝',
-    '不带电芯充电宝',
-    '未指定类别'
+    '不带电芯充电宝'
+    # '未指定类别'
 )
 
 # bb = BatBboxDataset(data_dir='D:/PycharmProjects/slim-faster-torch/data/')
-# for i in range(5500):
+# for i in range(500):
 #     bb.get_example(i)

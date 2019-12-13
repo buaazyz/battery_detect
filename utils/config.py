@@ -7,12 +7,12 @@ from pprint import pprint
 
 class Config:
     # data
-    data_dir = 'D:/PycharmProjects/slim-faster-torch/data/'
+    data_dir = '../slim-faster-torch/data/'
     split = 'train'
     min_size = 600  # image resize
     max_size = 1000 # image resize
-    num_workers = 8
-    test_num_workers = 8
+    num_workers = 1
+    test_num_workers = 1
 
     # sigma for l1_smooth_loss
     rpn_sigma = 3.
@@ -22,7 +22,7 @@ class Config:
     # 0.0005 in origin paper but 0.0001 in tf-faster-rcnn
     weight_decay = 0.0005
     lr_decay = 0.1  # 1e-3 -> 1e-4
-    lr = 1e-3
+    lr = 1e-5
 
 
     # visualization
@@ -33,23 +33,29 @@ class Config:
     # preset
     data = 'bat'
     pretrained_model = 'vgg16'
-
+    
+    
+    istrain = False
+    testfile = None
+    
     # training
-    epoch = 1
+    epoch = 2
 
 
     use_adam = False # Use Adam optimizer
     use_chainer = False # try match everything as chainer
     use_drop = False # use dropout in RoIHead
     # debug
-    debug_file = 'D:/PycharmProjects/slim-faster-torch/debug'
+    debug_file = '../slim-faster-torch/debug'
 
-    test_num = 10000
+    test_num = 1100
     # model
-    load_path = 'D:/PycharmProjects/slim-faster-torch/checkpoints/chainer_best_model_converted_to_pytorch_0.7053.pth'
-
+    load_path = '../slim-faster-torch/checkpoints/fasterrcnn_12121757_ep4'
+#     load_path= None
+    
     caffe_pretrain = False # use caffe pretrained model instead of torchvision
-    caffe_pretrain_path = 'D:/PycharmProjects/slim-faster-torch/checkpoints/vgg16_caffe.pth'
+#     caffe_pretrain_path = None
+    caffe_pretrain_path = '../slim-faster-torch/checkpoints/vgg16_caffe.pth'
 
     def _parse(self, kwargs):
         state_dict = self._state_dict()

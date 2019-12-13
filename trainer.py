@@ -5,10 +5,11 @@ import time
 from torch.nn import functional as F
 from model.utils.creator_tool import AnchorTargetCreator, ProposalTargetCreator
 
+import numpy as np
 from torch import nn
 import torch as t
 from utils import array_tool as at
-from utils.vis_tool import Visualizer
+# from utils.vis_tool import Visualizer
 
 from utils.config import opt
 from torchnet.meter import ConfusionMeter, AverageValueMeter
@@ -55,11 +56,12 @@ class FasterRCNNTrainer(nn.Module):
 
         self.optimizer = self.faster_rcnn.get_optimizer()
         # visdom wrapper
-        self.vis = Visualizer(env=opt.env)
+        # self.vis = Visualizer(env=opt.env)
 
         # indicators for training status
         self.rpn_cm = ConfusionMeter(2)
-        self.roi_cm = ConfusionMeter(21)
+        self.roi_cm = ConfusionMeter(3)
+#         self.roi_cm = ConfusionMeter(21)
         self.meters = {k: AverageValueMeter() for k in LossTuple._fields}  # average loss
 
     def forward(self, imgs, bboxes, labels, scale):
@@ -154,7 +156,7 @@ class FasterRCNNTrainer(nn.Module):
             gt_roi_loc,
             gt_roi_label.data,
             self.roi_sigma)
-
+#         weight = t.Tensor([10,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]).cuda()
         roi_cls_loss = nn.CrossEntropyLoss()(roi_score, gt_roi_label.cuda())
 
         self.roi_cm.add(at.totensor(roi_score, False), gt_roi_label.data.long())
@@ -189,7 +191,7 @@ class FasterRCNNTrainer(nn.Module):
         save_dict['model'] = self.faster_rcnn.state_dict()
         save_dict['config'] = opt._state_dict()
         save_dict['other_info'] = kwargs
-        save_dict['vis_info'] = self.vis.state_dict()
+#         save_dict['vis_info'] = self.vis.state_dict()
 
         if save_optimizer:
             save_dict['optimizer'] = self.optimizer.state_dict()
@@ -205,7 +207,7 @@ class FasterRCNNTrainer(nn.Module):
             os.makedirs(save_dir)
 
         t.save(save_dict, save_path)
-        self.vis.save([self.vis.env])
+#         self.vis.save([self.vis.env])
         return save_path
 
     def load(self, path, load_optimizer=True, parse_opt=False, ):
@@ -240,10 +242,13 @@ def _smooth_l1_loss(x, t, in_weight, sigma):
     sigma2 = sigma ** 2
     diff = in_weight * (x - t)
     abs_diff = diff.abs()
+
     flag = (abs_diff.data < (1. / sigma2)).float()
     y = (flag * (sigma2 / 2.) * (diff ** 2) +
          (1 - flag) * (abs_diff - 0.5 / sigma2))
-    return y.sum()
+    modif = at.tonumpy(y)
+    modif[np.isnan(modif)] = 0
+    return modif.sum()
 
 
 def _fast_rcnn_loc_loss(pred_loc, gt_loc, gt_label, sigma):

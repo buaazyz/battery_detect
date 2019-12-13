@@ -100,11 +100,11 @@ class Transform(object):
 class Dataset:
     def __init__(self, opt):
         self.opt = opt
-        self.db = BatBboxDataset(opt.data_dir)
+        self.db = BatBboxDataset(opt.data_dir, opt.split)
         self.tsf = Transform(opt.min_size, opt.max_size)
 
     def __getitem__(self, idx):
-        ori_img, bbox, label, difficult = self.db.get_example(idx)
+        ori_img, bbox, label = self.db.get_example(idx)
 
         img, bbox, label, scale = self.tsf((ori_img, bbox, label))
         # TODO: check whose stride is negative to fix this instead copy all
@@ -116,8 +116,11 @@ class Dataset:
 
 
 class TestDataset:
-    def __init__(self, opt, split='total'):
+    def __init__(self, opt, split='test'):
         self.opt = opt
+        if opt.testfile != None:
+            split = opt.testfile[:-4]
+            print(split)
         self.db = BatBboxDataset(opt.data_dir, split=split)
 
     def __getitem__(self, idx):
@@ -128,4 +131,4 @@ class TestDataset:
     def __len__(self):
         return len(self.db)
 
-td = TestDataset(opt,split='total')
+td = TestDataset(opt,split='test')
